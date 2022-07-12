@@ -1,0 +1,11 @@
+/node_modules/
+node_modules/
+.env
+.env.local.js
+.env.development.js
+.env.test.js
+.env.production.js
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
