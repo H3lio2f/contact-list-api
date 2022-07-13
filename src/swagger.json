@@ -58,6 +58,47 @@
                 }
             }
         },
+        "/signup": {
+            "post": {
+                "summary": "Adicionar Usuário",
+                "description": "Esta rota adiciona um novo usuário",
+                "tags": ["Usuários"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Token"
+                            },
+                            "examples": {
+                                "contact": {
+                                    "value":{
+                                        "name": "Helio Fragao Fila",
+                                        "email": "heliofila@gmail.com",
+                                        "password": "123456",
+                                        "role": "user"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users":{
             "get": {
                 "summary": "Listar Usuários",
