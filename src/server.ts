@@ -1,11 +1,14 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import swaggerUi from 'swagger-ui-express';
 import mongoose from "mongoose";
-import { signinRouter } from "./routes/signin.js";
-import { signupRouter } from "./routes/signup.js";
-import { usersRouter } from "./routes/users.js";
-import { contactsRouter } from "./routes/contacts.js";
+import { signinRouter } from "./routes/signin";
+import { signupRouter } from "./routes/signup";
+import { usersRouter } from "./routes/users";
+import { contactsRouter } from "./routes/contacts";
+
+import swaggerDocs from './swagger.json';
 
 process.on("unhandledRejection", (error) => {
   throw error;
@@ -17,6 +20,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use("/api/signin", signinRouter);
 app.use("/api/signup", signupRouter);
@@ -32,9 +37,6 @@ app.listen(port, () => {
 });
 
 mongoose
-  .connect(process.env.MONGO_DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_DB_URL)
   .then(() => console.log("MongoDB connection established..."))
   .catch((error) => console.error("MongoDB connection failed:", error.message));

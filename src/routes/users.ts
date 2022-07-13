@@ -1,7 +1,9 @@
+import bcrypt from 'bcrypt';
 import express from "express";
 import Joi from 'joi';
-import { auth } from "../middleware/auth.js";
-import { User } from "../models/user.js";
+import jwt from "jsonwebtoken";
+import { auth } from "../middleware/auth";
+import { User } from "../models/user";
 
 const router = express.Router();
 
@@ -36,23 +38,26 @@ router.put("/:id", auth, async (req, res, next) => {
     
     const { error } = schema.validate(req.body);
 
-    if (error) return res.status(400).send(result.error.details[0].message);
+    if (error) return res.status(400).send(error.details[0].message);
 
     const user = await User.findById(req.params.id);
 
     if (!user) return res.status(404).send("Usuário não encontrado.");
 
-    const userUpdated = await User.findByIdAndUpdate(req.params.id, { ...req.body }, { new: true });
+    const salt = await bcrypt.genSalt(10);
+    const passwordHashed = await bcrypt.hash(req.body.password, salt);
+
+    const userUpdated = await User.findByIdAndUpdate(req.params.id, { ...req.body, password: passwordHashed }, { new: true });
 
     return res.send({
-        data: userUpdated, 
+        data: userUpdated,
         message: "Informações actualizadas com sucesso!"
     });
   
 });
 
 router.patch("/:id/active", auth, async (req, res, next) => {
-   
+
     const user = await User.findById(req.params.id);
 
     if (!user) return res.status(404).send("Usuário não encontrado.");
@@ -61,13 +66,13 @@ router.patch("/:id/active", auth, async (req, res, next) => {
 
     return res.send({
         data: userUpdated, 
-        message: "Usuário tornado active!"
+        message: "Usuário tornado activo!"
     });
   
 });
 
 router.patch("/:id/desactive", auth, async (req, res, next) => {
-   
+
     const user = await User.findById(req.params.id);
 
     if (!user) return res.status(404).send("Usuário não encontrado.");
@@ -76,7 +81,7 @@ router.patch("/:id/desactive", auth, async (req, res, next) => {
 
     return res.send({
         data: userUpdated, 
-        message: "Usuário tornado inactive!"
+        message: "Usuário tornado inactivo!"
     });
   
 });

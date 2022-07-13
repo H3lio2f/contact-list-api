@@ -1,0 +1,641 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API para listagem de contactos",
+        "description": "Esta API permite a gestão de contactos.",
+        "contact": {
+            "email": "heliofragaofila.helio@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000/api/",
+            "description": "API de producão"
+        },
+        {
+            "url": "http://localhost:5000/api/",
+            "description": "API de local"
+        }
+    ],
+    "paths": {
+        "/signin": {
+            "post": {
+                "summary": "Autenticar-se",
+                "description": "Esta rota autentica o usuario",
+                "tags": ["Autenticação"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Token"
+                            },
+                            "examples": {
+                                "contact": {
+                                    "value":{
+                                        "email": "heliofila@gmail.com",
+                                        "password": "123456"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users":{
+            "get": {
+                "summary": "Listar Usuários",
+                "description": "Esta rota lista todos os usuários",
+                "tags": ["Usuários"],
+                "security": [{ "apiKeyAuth": []}],
+                "responses": {
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "summary": "Mostrar usuário",
+                "description": "Esta rota mostra um usuário especifico através do seu ID",
+                "tags": ["Usuários"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Actualizar usuário",
+                "description": "Esta rota actualiza um usuário",
+                "tags": ["Usuários"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "contact": {
+                                    "value":{                                 
+                                        "name": "Helio Fragao Fila updated",
+                                        "email": "heliofila@gmail.com",
+                                        "password": "123456",
+                                        "role": "admin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto actualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir usuário",
+                "description": "Esta rota exclui um usuário",
+                "tags": ["Usuários"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}/active": {
+            "patch": {
+                "summary": "Activar usuário",
+                "description": "Esta rota torna um usuário activo",
+                "tags": ["Usuários"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuaário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Usuário tornado activo!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}/desactive": {
+            "patch": {
+                "summary": "Desactivar usuário",
+                "description": "Esta rota torna um usuário inactivo",
+                "tags": ["Usuários"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuaário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Usuário tornado inactivo!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/contacts": {
+            "post": {
+                "summary": "Adicionar novo contacto",
+                "description": "Esta rota adiciona um novo contacto a lista",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Contact"
+                            },
+                            "examples": {
+                                "contact": {
+                                    "value":{
+                                        "name": "Helly",
+                                        "email": "heliofragaofila.helly@gmail.com",
+                                        "phone": "937543544"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto adicionado com sucesso!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Contact"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Listar Contactos",
+                "description": "Esta rota lista todos os contactos adicionados a lista",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contacts/{id}":{
+            "get": {
+                "summary": "Mostrar contacto",
+                "description": "Esta rota mostra um contacto especifico através do seu ID",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do contacto",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Actualizar contacto",
+                "description": "Esta rota actualiza um contacto",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do contacto",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Contact"
+                            },
+                            "examples": {
+                                "contact": {
+                                    "value":{
+                                        "name": "Helly Updated",
+                                        "email": "heliofragaofila.helly@gmail.com",
+                                        "phone": "937543544"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto actualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir contacto",
+                "description": "Esta rota exclui um contacto da lista",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do contacto",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contacts/{id}/enable": {
+            "patch": {
+                "summary": "Desbloquear contacto",
+                "description": "Esta rota desbloqueia um contacto",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do contacto",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto desbloqueado com successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contacts/{id}/desable": {
+            "patch": {
+                "summary": "Bloquear contacto",
+                "description": "Esta rota bloqueia um contacto",
+                "tags": ["Contactos"],
+                "security": [{ "apiKeyAuth": []}],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do contacto",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Contacto não encontrado"
+                    },
+                    "401": {
+                        "description": "Usuário não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    },
+                    "200": {
+                        "description": "Contacto desbloqueado com successo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Contact"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Contact": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    }
+                }
+            },
+            "User": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "apiKeyAuth":{
+                "type": "apiKey",
+                "in":  "header",
+                "name": "X-AUTH-TOKEN"
+            }
+        }
+    }
+}
