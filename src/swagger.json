@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:5000/api/",
+            "url": "https://helio2f-contact-list-api.herokuapp.com/api/",
             "description": "API de producão"
         },
         {

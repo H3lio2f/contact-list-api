@@ -1,0 +1,5 @@
+JWT_SECRET_KEY=secret
+MONGO_DB_URL="mongodb+srv://helio2f:helio2f@cluster0.nytfu.mongodb.net/?retryWrites=true&w=majority"
+//MONGO_DB_URL="mongodb://localhost:27017/contacts"
+PORT=5000
+
